@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { nanoid } from 'nanoid';
 import { AddContactForm, Label, Btn, Input } from './Form.styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts } from 'redux/selectors';
+import { selectContacts } from 'redux/contacts/selectors';
 import { showErrorMessage, showSuccessMessage } from 'components/Notification';
-import { addContact } from 'redux/operations';
+import { addContact } from 'redux/contacts/operations';
 
 const Form = () =>  {
   const [name, stateName] = useState('');
-  const [phone, statePhone] = useState('');
+  const [number, stateNumber] = useState('');
 
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
@@ -18,7 +18,7 @@ const Form = () =>  {
     const { name, value } = evt.target;
     switch (name) {
       case 'name': stateName(value); break;
-      case 'phone': statePhone(value); break;
+      case 'number': stateNumber(value); break;
       default: throw new Error('Unknown state');
     }
   };
@@ -27,19 +27,19 @@ const Form = () =>  {
     evt.preventDefault();
 
     if (contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase().trim())) {
-            showErrorMessage(`The contact with name "${name}" is already in your phonebook`);
+            showErrorMessage(`The contact with name "${name}" is already in your numberbook`);
             reset();
             return;
     };
   
-    dispatch(addContact({name, phone}));
-    showSuccessMessage(`The contact "${name}" is added to your phonebook`);
+    dispatch(addContact({name, number}));
+    showSuccessMessage(`The contact "${name}" is added to your numberbook`);
     reset();
   };
   
  const reset = () => {
    stateName('');
-   statePhone('');
+   stateNumber('');
  
   };
     
@@ -59,16 +59,16 @@ const Form = () =>  {
             />
           </Label>
           <Label htmlFor="">
-            Phone <br />
+            Number <br />
             <Input
               type="tel"
-              name="phone"
+              name="number"
               pattern="\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}"
-              title="Phone phone can contain only phones, spaces, dashes, parentheses and can start with +"
-              placeholder="enter contact's phone phone"
+              title="number number can contain only numbers, spaces, dashes, parentheses and can start with +"
+              placeholder="enter contact's phone number"
               fullWidth
-              aria-describedby="phone phone"
-              required value={phone} onChange={handlAdd}
+              aria-describedby="phone number"
+              required value={number} onChange={handlAdd}
             />
           </Label>
           <Btn type='submit'>Add contact</Btn>
